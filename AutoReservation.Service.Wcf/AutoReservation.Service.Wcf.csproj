@@ -84,6 +84,7 @@
   <ItemGroup>
     <None Include="..\Assets\App.config">
       <Link>App.config</Link>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\..\Assets\AutoReservation.StrongNameKey.snk">
       <Link>..\Assets\AutoReservation.StrongNameKey.snk</Link>
