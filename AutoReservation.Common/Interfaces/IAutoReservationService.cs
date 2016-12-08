@@ -7,43 +7,43 @@ namespace AutoReservation.Common.Interfaces
     [ServiceContract]
     public interface IAutoReservationService
     {
-        [OperationContract]
-        List<AutoDto> getAllAuto();
-        [OperationContract]
-        List<KundeDto> getAllKunde();
-        [OperationContract]
-        List<ReservationDto> getAllReservation();
+
+        List<AutoDto> Autos { [OperationContract] get; }
+        List<KundeDto> Kunden { [OperationContract] get; }
+        List<ReservationDto> Reservationen { [OperationContract] get; }
+
+
 
 
         [OperationContract]
-        AutoDto getAuto(int id);
+        AutoDto GetAutoById(int id);
         [OperationContract]
-        KundeDto getKunde(int id);
+        KundeDto GetKundeById(int id);
         [OperationContract]
-        ReservationDto getReservation(int id);
+        ReservationDto GetReservationByNr(int reservationNr);
 
 
         [OperationContract]
-        void insertAuto(AutoDto auto);
+        AutoDto InsertAuto(AutoDto auto);
         [OperationContract]
-        void insertKunde(KundeDto kunde);
+        KundeDto InsertKunde(KundeDto kunde);
         [OperationContract]
-        void insertReservation(ReservationDto reservation);
+        ReservationDto InsertReservation(ReservationDto reservation);
 
 
         [OperationContract]
-        void updateAuto(int autoOld, AutoDto autoNew);
+        AutoDto UpdateAuto(AutoDto auto);
         [OperationContract]
-        void updateKunde(int kundeOld, KundeDto kundeNew);
+        KundeDto UpdateKunde(KundeDto kunde);
         [OperationContract]
-        void updateReservation(int reservationOld, ReservationDto reservationNew);
+        ReservationDto UpdateReservation(ReservationDto reservation);
 
 
         [OperationContract]
-        void deleteAuto(int auto);
+        void DeleteAuto(AutoDto auto);
         [OperationContract]
-        void deleteKunde(int kunde);
+        void DeleteKunde(KundeDto kunde);
         [OperationContract]
-        void deleteReservation(int reservation);
+        void DeleteReservation(ReservationDto reservation);
     }
 }
