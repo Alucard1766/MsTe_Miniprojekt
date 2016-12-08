@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -14,8 +15,7 @@ namespace AutoReservation.Dal.Entities
         public byte[] RowVersion { get; set; }
         [Required]
         public int Tagestarif { get; set; }
-        [Required]
-        public int AutoKlasse { get; set; }
+        public ICollection<Reservation> Reservationen { get; set; }
     }
 
     public class LuxusklasseAuto : Auto

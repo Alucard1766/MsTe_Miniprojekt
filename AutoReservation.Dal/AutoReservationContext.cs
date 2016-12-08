@@ -1,6 +1,7 @@
 ﻿using AutoReservation.Dal.Entities;
 using AutoReservation.Dal.Migrations;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace AutoReservation.Dal
 {
@@ -44,6 +45,11 @@ namespace AutoReservation.Dal
             //      Remarks:
             //      This could not be done using attributes on business entities
             //      since the discriminator (AutoKlasse) must not be part of the entity.
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Entity<Auto>()
+            .Map<StandardAuto>(a => a.Requires("Autoklasse").HasValue(2))
+            .Map<MittelklasseAuto>(a => a.Requires("Autoklasse").HasValue(1))
+            .Map<LuxusklasseAuto>(a => a.Requires("Autoklasse").HasValue(0));
         }
     }
 }

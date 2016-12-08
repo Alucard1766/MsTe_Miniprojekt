@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AutoReservation.Dal.Entities
 {
@@ -7,8 +8,13 @@ namespace AutoReservation.Dal.Entities
     {
         [Key]
         public int ReservationsNr { get; set; }
+        [Required]
         public int AutoId { get; set; }
+        [ForeignKey("AutoId")]
+        public Auto Auto { get; set; }
         public int KundeId { get; set; }
+        [ForeignKey("KundeId")]
+        public Kunde Kunde { get; set; }
         [Required]
         public DateTime Von { get; set; }
         [Required]
