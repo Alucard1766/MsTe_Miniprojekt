@@ -9,21 +9,16 @@ namespace AutoReservation.Common.Interfaces
     {
         [OperationContract]
         List<AutoDto> getAllAuto();
-
         [OperationContract]
         List<KundeDto> getAllKunde();
-
         [OperationContract]
         List<ReservationDto> getAllReservation();
 
 
-
         [OperationContract]
         AutoDto getAuto(int id);
-
         [OperationContract]
         KundeDto getKunde(int id);
-
         [OperationContract]
         ReservationDto getReservation(int id);
 
@@ -35,5 +30,20 @@ namespace AutoReservation.Common.Interfaces
         [OperationContract]
         void insertReservation(ReservationDto reservation);
 
+
+        [OperationContract]
+        void updateAuto(int autoOld, AutoDto autoNew);
+        [OperationContract]
+        void updateKunde(int kundeOld, KundeDto kundeNew);
+        [OperationContract]
+        void updateReservation(int reservationOld, ReservationDto reservationNew);
+
+
+        [OperationContract]
+        void deleteAuto(int auto);
+        [OperationContract]
+        void deleteKunde(int kunde);
+        [OperationContract]
+        void deleteReservation(int reservation);
     }
 }
