@@ -10,10 +10,14 @@ namespace AutoReservation.Dal.Entities
         [Key]
         public int Id { get; set; }
         [StringLength(20)]
+        [Required]
         public String Nachname { get; set; }
         [StringLength(20)]
+        [Required]
         public String Vorname { get; set; }
+        [Required]
         public DateTime Geburtsdatum { get; set; }
+        [Timestamp]
         public byte[] RowVersion { get; set; }
     }
 }
