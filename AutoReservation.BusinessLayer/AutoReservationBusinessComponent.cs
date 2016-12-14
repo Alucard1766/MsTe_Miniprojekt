@@ -50,17 +50,23 @@ namespace AutoReservation.BusinessLayer
                 using (var context = new AutoReservationContext())
                 {
                     var dbReturn = from r in context.Reservationen select r;
-                    List<Reservation> kundeList = new List<Reservation>();
+                    List<Reservation> reservationList = new List<Reservation>();
                     foreach (Reservation r in dbReturn)
                     {
-                        kundeList.Add(r);
+                        if (r.Auto == null)
+                        {
+                            r.Auto = GetAutoById(r.AutoId);
+                        }
+                        if (r.Kunde == null)
+                        {
+                            r.Kunde = GetKundeById(r.KundeId);
+                        }
+                        reservationList.Add(r);
                     }
-                    return kundeList;
+                    return reservationList;
                 }
             }
         }
-
-        //Reservationen
 
         public Auto GetAutoById(int id)
         {
@@ -76,7 +82,7 @@ namespace AutoReservation.BusinessLayer
                 }
                 else
                 {
-                    throw new System.Exception("no or too much auto for id"); //TODO: Wrong exception here
+                    return null;
                 }
             }
         }
@@ -95,7 +101,7 @@ namespace AutoReservation.BusinessLayer
                 }
                 else
                 {
-                    throw new System.Exception("no or too much kunde for id"); //TODO: Wrong exception here
+                    return null;
                 }
             }
         }
@@ -114,7 +120,7 @@ namespace AutoReservation.BusinessLayer
                 }
                 else
                 {
-                    throw new System.Exception("no or too much reservation for id"); //TODO: Wrong exception here
+                    return null;
                 }
             }
         }
@@ -125,6 +131,7 @@ namespace AutoReservation.BusinessLayer
             {
                 context.Autos.Add(auto);
                 context.SaveChanges();
+                
             }
             return auto;
         }
@@ -161,8 +168,8 @@ namespace AutoReservation.BusinessLayer
                 if (dbReturn != null)
                 {
                     dbReturn.Marke = auto.Marke;
-                    dbReturn.Reservationen = auto.Reservationen;
-                    dbReturn.RowVersion = auto.RowVersion;
+                    //dbReturn.Reservationen = auto.Reservationen;
+                    //dbReturn.RowVersion = auto.RowVersion;
                     dbReturn.Tagestarif = auto.Tagestarif;
                     context.SaveChanges();
                     
@@ -181,8 +188,8 @@ namespace AutoReservation.BusinessLayer
                 if (dbReturn != null)
                 {
                     dbReturn.Geburtsdatum = kunde.Geburtsdatum;
-                    dbReturn.Reservationen = kunde.Reservationen;
-                    dbReturn.RowVersion = kunde.RowVersion;
+                    //dbReturn.Reservationen = kunde.Reservationen;
+                    //dbReturn.RowVersion = kunde.RowVersion;
                     dbReturn.Nachname = kunde.Nachname;
                     dbReturn.Vorname = kunde.Vorname;
                     context.SaveChanges();
@@ -203,7 +210,7 @@ namespace AutoReservation.BusinessLayer
                 {
                     dbReturn.Kunde = reservation.Kunde;
                     dbReturn.KundeId = reservation.KundeId;
-                    dbReturn.RowVersion = reservation.RowVersion;
+                    //dbReturn.RowVersion = reservation.RowVersion;
                     dbReturn.Von = reservation.Von;
                     dbReturn.Auto = reservation.Auto;
                     dbReturn.AutoId = reservation.AutoId;
