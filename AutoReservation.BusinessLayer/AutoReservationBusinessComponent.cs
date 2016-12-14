@@ -49,10 +49,52 @@ namespace AutoReservation.BusinessLayer
             }
         }
 
-
-        Auto InsertAuto(Auto auto)
+        public Auto InsertAuto(Auto auto)
         {
-            //TODO: FOlie 64 im EntityFramework
+            using (var context = new AutoReservationContext())
+            {
+                context.Autos.Add(auto);
+                context.SaveChanges();
+            }
+            return auto;
+        }
+        //TODO: ERROR HANDLING
+
+
+
+        public Auto UpdateAuto(Auto auto)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = (from a in context.Autos
+                                where a.Id == auto.Id
+                                select a).FirstOrDefault();
+                if (dbReturn != null)
+                {
+                    dbReturn.Marke = auto.Marke;
+                    dbReturn.Reservationen = auto.Reservationen;
+                    dbReturn.RowVersion = auto.RowVersion;
+                    dbReturn.Tagestarif = auto.Tagestarif;
+                    context.SaveChanges();
+                    
+                }
+                return dbReturn;
+            }
+        }
+
+        public void DeleteAuto(Auto auto)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = from a in context.Autos
+                               where a.Id == auto.Id
+                               select a;
+                foreach (var a in dbReturn)
+                {
+                    context.Autos.Remove(a);
+                }
+                context.SaveChanges();
+            }
         }
 
         private static LocalOptimisticConcurrencyException<T> CreateLocalOptimisticConcurrencyException<T>(AutoReservationContext context, T entity)
