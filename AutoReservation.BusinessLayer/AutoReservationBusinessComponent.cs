@@ -26,7 +26,39 @@ namespace AutoReservation.BusinessLayer
             }
         }
 
-        //Kunden
+        public List<Kunde> Kunden
+        {
+            get
+            {
+                using (var context = new AutoReservationContext())
+                {
+                    var dbReturn = from k in context.Kunden select k;
+                    List<Kunde> kundeList = new List<Kunde>();
+                    foreach (Kunde k in dbReturn)
+                    {
+                        kundeList.Add(k);
+                    }
+                    return kundeList;
+                }
+            }
+        }
+
+        public List<Reservation> Reservationen
+        {
+            get
+            {
+                using (var context = new AutoReservationContext())
+                {
+                    var dbReturn = from r in context.Reservationen select r;
+                    List<Reservation> kundeList = new List<Reservation>();
+                    foreach (Reservation r in dbReturn)
+                    {
+                        kundeList.Add(r);
+                    }
+                    return kundeList;
+                }
+            }
+        }
 
         //Reservationen
 
@@ -37,7 +69,7 @@ namespace AutoReservation.BusinessLayer
                 var dbReturn = from a in context.Autos
                                where a.Id == id
                                select a;
-                
+
                 if (dbReturn.Count() == 1)
                 {
                     return dbReturn.First();
@@ -45,6 +77,44 @@ namespace AutoReservation.BusinessLayer
                 else
                 {
                     throw new System.Exception("no or too much auto for id"); //TODO: Wrong exception here
+                }
+            }
+        }
+
+        public Kunde GetKundeById(int id)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = from k in context.Kunden
+                               where k.Id == id
+                               select k;
+
+                if (dbReturn.Count() == 1)
+                {
+                    return dbReturn.First();
+                }
+                else
+                {
+                    throw new System.Exception("no or too much kunde for id"); //TODO: Wrong exception here
+                }
+            }
+        }
+
+        public Reservation GetReservationByNr(int id)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = from r in context.Reservationen
+                               where r.ReservationsNr == id
+                               select r;
+
+                if (dbReturn.Count() == 1)
+                {
+                    return dbReturn.First();
+                }
+                else
+                {
+                    throw new System.Exception("no or too much reservation for id"); //TODO: Wrong exception here
                 }
             }
         }
@@ -58,7 +128,26 @@ namespace AutoReservation.BusinessLayer
             }
             return auto;
         }
-        //TODO: ERROR HANDLING
+
+        public Kunde InsertKunde(Kunde kunde)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                context.Kunden.Add(kunde);
+                context.SaveChanges();
+            }
+            return kunde;
+        }
+
+        public Reservation InsertReservation(Reservation reservation)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                context.Reservationen.Add(reservation);
+                context.SaveChanges();
+            }
+            return reservation;
+        }
 
 
 
@@ -82,6 +171,50 @@ namespace AutoReservation.BusinessLayer
             }
         }
 
+        public Kunde UpdateKunde(Kunde kunde)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = (from k in context.Kunden
+                                where k.Id == kunde.Id
+                                select k).FirstOrDefault();
+                if (dbReturn != null)
+                {
+                    dbReturn.Geburtsdatum = kunde.Geburtsdatum;
+                    dbReturn.Reservationen = kunde.Reservationen;
+                    dbReturn.RowVersion = kunde.RowVersion;
+                    dbReturn.Nachname = kunde.Nachname;
+                    dbReturn.Vorname = kunde.Vorname;
+                    context.SaveChanges();
+
+                }
+                return dbReturn;
+            }
+        }
+
+        public Reservation UpdateReservation(Reservation reservation)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = (from r in context.Reservationen
+                                where r.ReservationsNr == reservation.ReservationsNr
+                                select r).FirstOrDefault();
+                if (dbReturn != null)
+                {
+                    dbReturn.Kunde = reservation.Kunde;
+                    dbReturn.KundeId = reservation.KundeId;
+                    dbReturn.RowVersion = reservation.RowVersion;
+                    dbReturn.Von = reservation.Von;
+                    dbReturn.Auto = reservation.Auto;
+                    dbReturn.AutoId = reservation.AutoId;
+                    dbReturn.Bis = reservation.Bis;
+                    context.SaveChanges();
+
+                }
+                return dbReturn;
+            }
+        }
+
         public void DeleteAuto(Auto auto)
         {
             using (var context = new AutoReservationContext())
@@ -92,6 +225,36 @@ namespace AutoReservation.BusinessLayer
                 foreach (var a in dbReturn)
                 {
                     context.Autos.Remove(a);
+                }
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteKunde(Kunde kunde)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = from k in context.Kunden
+                               where k.Id == kunde.Id
+                               select k;
+                foreach (var k in dbReturn)
+                {
+                    context.Kunden.Remove(k);
+                }
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteReservation(Reservation reservation)
+        {
+            using (var context = new AutoReservationContext())
+            {
+                var dbReturn = from r in context.Reservationen
+                               where r.ReservationsNr == reservation.ReservationsNr
+                               select r;
+                foreach (var r in dbReturn)
+                {
+                    context.Reservationen.Remove(r);
                 }
                 context.SaveChanges();
             }
