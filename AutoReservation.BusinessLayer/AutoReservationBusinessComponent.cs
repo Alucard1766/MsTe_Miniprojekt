@@ -116,7 +116,16 @@ namespace AutoReservation.BusinessLayer
 
                 if (dbReturn.Count() == 1)
                 {
-                    return dbReturn.First();
+                    Reservation resReturn = dbReturn.First();
+                    if (resReturn.Auto == null)
+                    {
+                        resReturn.Auto = GetAutoById(resReturn.AutoId);
+                    }
+                    if (resReturn.Kunde == null)
+                    {
+                        resReturn.Kunde = GetKundeById(resReturn.KundeId);
+                    }
+                    return resReturn;
                 }
                 else
                 {
