@@ -238,9 +238,18 @@ namespace AutoReservation.Service.Wcf.Testing
         }
 
         [TestMethod]
+        [ExpectedException(typeof(FaultException))]
         public void UpdateReservationWithOptimisticConcurrencyTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationDto res1 = Target.Reservationen[0];
+            res1.Bis = new DateTime(2017, 1, 1);
+
+            ReservationDto res2 = Target.Reservationen[0];
+            res2.Bis = new DateTime(2018, 1, 1);
+
+            Target.UpdateReservation(res2);
+
+            Target.UpdateReservation(res1);
         }
 
         #endregion

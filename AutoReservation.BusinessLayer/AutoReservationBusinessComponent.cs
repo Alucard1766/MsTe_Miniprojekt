@@ -211,22 +211,20 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = (from r in context.Reservationen
-                                where r.ReservationsNr == reservation.ReservationsNr
-                                select r).FirstOrDefault();
-                if (dbReturn != null)
+                try
                 {
-                    dbReturn.Kunde = reservation.Kunde;
-                    dbReturn.KundeId = reservation.KundeId;
-                    //dbReturn.RowVersion = reservation.RowVersion;
-                    dbReturn.Von = reservation.Von;
-                    dbReturn.Auto = reservation.Auto;
-                    dbReturn.AutoId = reservation.AutoId;
-                    dbReturn.Bis = reservation.Bis;
+                    context.Reservationen.Attach(reservation);
+                    context.Entry(reservation).State = EntityState.Modified;
+                    context.Entry(reservation).Reference(r => r.Auto).Load();
+                    context.Entry(reservation).Reference(r => r.Kunde).Load();
                     context.SaveChanges();
-
+                    return reservation;
                 }
-                return dbReturn;
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw CreateLocalOptimisticConcurrencyException(context, reservation);
+                }
+
             }
         }
 
