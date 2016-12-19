@@ -132,7 +132,16 @@ namespace AutoReservation.Service.Wcf
         {
             WriteActualMethod();
             var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.UpdateKunde(DtoConverter.ConvertToEntity(kunde)));
+            try
+            {
+                return DtoConverter.ConvertToDto(businessLayer.UpdateKunde(DtoConverter.ConvertToEntity(kunde)));
+            }
+            catch (LocalOptimisticConcurrencyException<Kunde> e)
+            {
+
+                throw new FaultException("Kunde Update failed");
+            }
+
         }
 
         public ReservationDto UpdateReservation(ReservationDto reservation)

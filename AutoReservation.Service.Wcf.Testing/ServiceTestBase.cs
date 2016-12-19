@@ -171,13 +171,6 @@ namespace AutoReservation.Service.Wcf.Testing
         {
             AutoDto auto = Target.Autos[0];
             auto.Marke = "Test";
-            //AutoDto auto = new AutoDto
-            //{
-            //    Id = 1,
-            //    Marke = "Test",
-            //    Tagestarif = 60,
-            //    AutoKlasse = AutoKlasse.Mittelklasse
-            //};
 
             AutoDto ret = Target.UpdateAuto(auto);
             Assert.AreEqual("Test", ret.Marke);
@@ -186,13 +179,9 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void UpdateKundeTest()
         {
-            KundeDto kunde = new KundeDto
-            {
-                Id = 1,
-                Nachname = "Nass",
-                Vorname = "Ueli",
-                Geburtsdatum = new DateTime(1981, 05, 05)
-            };
+            KundeDto kunde = Target.Kunden[0];
+            kunde.Vorname = "Ueli";
+
 
             KundeDto ret = Target.UpdateKunde(kunde);
             Assert.AreEqual("Ueli", ret.Vorname);
@@ -201,14 +190,9 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void UpdateReservationTest()
         {
-            ReservationDto reservation = new ReservationDto
-            {
-                ReservationsNr = 1,
-                Auto = Target.GetAutoById(1),
-                Kunde = Target.GetKundeById(1),
-                Von = new DateTime(2020, 01, 10),
-                Bis = new DateTime(2020, 01, 30)
-            };
+            ReservationDto reservation = Target.Reservationen[1];
+            reservation.Bis = new DateTime(2020, 01, 30);
+
             ReservationDto ret = Target.UpdateReservation(reservation);
             Assert.AreEqual(new DateTime(2020, 01, 30), ret.Bis);
         }
@@ -231,11 +215,21 @@ namespace AutoReservation.Service.Wcf.Testing
             Target.UpdateAuto(auto1);
         }
 
+
         [TestMethod]
+        [ExpectedException(typeof(FaultException))]
         public void UpdateKundeWithOptimisticConcurrencyTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            KundeDto kunde1 = Target.GetKundeById(1);
+            kunde1.Vorname = "Anna";
+
+            KundeDto kunde2 = Target.GetKundeById(1);
+            kunde2.Vorname = "Analise";
+
+            Target.UpdateKunde(kunde2);
+            Target.UpdateKunde(kunde1);
         }
+
 
         [TestMethod]
         [ExpectedException(typeof(FaultException))]

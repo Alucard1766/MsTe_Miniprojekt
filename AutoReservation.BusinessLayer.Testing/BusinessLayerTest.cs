@@ -47,13 +47,8 @@ namespace AutoReservation.BusinessLayer.Testing
         [TestMethod]
         public void UpdateKundeTest()
         {
-            Kunde kunde = new Kunde
-            {
-                Id = 1,
-                Nachname = "Nass",
-                Vorname = "Ueli",
-                Geburtsdatum = new DateTime(1981, 05, 05)
-            };
+            Kunde kunde = Target.Kunden[0];
+            kunde.Vorname = "Ueli";
 
             Kunde ret = Target.UpdateKunde(kunde);
             Assert.AreEqual("Ueli", ret.Vorname);
@@ -62,14 +57,9 @@ namespace AutoReservation.BusinessLayer.Testing
         [TestMethod]
         public void UpdateReservationTest()
         {
-            Reservation reservation = new Reservation
-            {
-                ReservationsNr = 1,
-                AutoId = 1,
-                KundeId = 1,
-                Von = new DateTime(2020, 01, 10),
-                Bis = new DateTime(2020, 01, 30)
-            };
+            Reservation reservation = Target.Reservationen[1];
+            reservation.Bis = new DateTime(2020, 01, 30);
+
             Reservation ret = Target.UpdateReservation(reservation);
             Assert.AreEqual(new DateTime(2020, 01, 30), ret.Bis);
         }
