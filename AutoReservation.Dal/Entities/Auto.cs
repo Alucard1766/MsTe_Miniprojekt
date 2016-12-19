@@ -10,6 +10,7 @@ namespace AutoReservation.Dal.Entities
         [Key]
         public int Id { get; set; }
         [Required]
+        [StringLength(20)]
         public string Marke { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
