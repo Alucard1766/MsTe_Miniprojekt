@@ -171,19 +171,18 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = (from a in context.Autos
-                                where a.Id == auto.Id
-                                select a).FirstOrDefault();
-                if (dbReturn != null)
+                try
                 {
-                    dbReturn.Marke = auto.Marke;
-                    //dbReturn.Reservationen = auto.Reservationen;
-                    //dbReturn.RowVersion = auto.RowVersion;
-                    dbReturn.Tagestarif = auto.Tagestarif;
+                    context.Autos.Attach(auto);
+                    context.Entry(auto).State = EntityState.Modified;
                     context.SaveChanges();
-                    
+                    return auto;
                 }
-                return dbReturn;
+                catch (DbUpdateConcurrencyException)
+                {
+
+                    throw CreateLocalOptimisticConcurrencyException(context, auto);
+                }
             }
         }
 

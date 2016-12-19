@@ -1,4 +1,5 @@
-﻿using AutoReservation.Common.DataTransferObjects;
+﻿using AutoReservation.BusinessLayer;
+using AutoReservation.Common.DataTransferObjects;
 using AutoReservation.Common.Interfaces;
 using AutoReservation.TestEnvironment;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -168,13 +169,15 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void UpdateAutoTest()
         {
-            AutoDto auto = new AutoDto
-            {
-                Id = 1,
-                Marke = "Test",
-                Tagestarif = 60,
-                AutoKlasse = AutoKlasse.Mittelklasse
-            };
+            AutoDto auto = Target.Autos[0];
+            auto.Marke = "Test";
+            //AutoDto auto = new AutoDto
+            //{
+            //    Id = 1,
+            //    Marke = "Test",
+            //    Tagestarif = 60,
+            //    AutoKlasse = AutoKlasse.Mittelklasse
+            //};
 
             AutoDto ret = Target.UpdateAuto(auto);
             Assert.AreEqual("Test", ret.Marke);
@@ -217,7 +220,25 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void UpdateAutoWithOptimisticConcurrencyTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            AutoDto auto1 = Target.GetAutoById(1);
+            auto1.Marke = "Marke1";
+
+            AutoDto auto2 = Target.GetAutoById(1);
+            auto2.Marke = "Marke2";
+
+            Target.UpdateAuto(auto2);
+
+            try
+            {
+                Target.UpdateAuto(auto1);
+            }
+            catch (Exception)
+            {
+                Assert.IsTrue(true);
+            }
+            
+            
+            
         }
 
         [TestMethod]
