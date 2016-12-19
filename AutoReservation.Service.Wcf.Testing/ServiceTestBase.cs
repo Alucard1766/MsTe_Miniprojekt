@@ -218,6 +218,7 @@ namespace AutoReservation.Service.Wcf.Testing
         #region Update with optimistic concurrency violation
 
         [TestMethod]
+        [ExpectedException(typeof(FaultException))]
         public void UpdateAutoWithOptimisticConcurrencyTest()
         {
             AutoDto auto1 = Target.GetAutoById(1);
@@ -227,18 +228,7 @@ namespace AutoReservation.Service.Wcf.Testing
             auto2.Marke = "Marke2";
 
             Target.UpdateAuto(auto2);
-
-            try
-            {
-                Target.UpdateAuto(auto1);
-            }
-            catch (Exception)
-            {
-                Assert.IsTrue(true);
-            }
-            
-            
-            
+            Target.UpdateAuto(auto1);
         }
 
         [TestMethod]

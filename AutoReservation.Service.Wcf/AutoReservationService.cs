@@ -5,6 +5,7 @@ using AutoReservation.Common.DataTransferObjects;
 using System.Collections.Generic;
 using AutoReservation.BusinessLayer;
 using AutoReservation.Dal.Entities;
+using System.ServiceModel;
 
 namespace AutoReservation.Service.Wcf
 {
@@ -116,7 +117,15 @@ namespace AutoReservation.Service.Wcf
         {
             WriteActualMethod();
             var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.UpdateAuto(DtoConverter.ConvertToEntity(auto)));
+            try
+            {
+                return DtoConverter.ConvertToDto(businessLayer.UpdateAuto(DtoConverter.ConvertToEntity(auto)));
+            }
+            catch (LocalOptimisticConcurrencyException<Auto> e)
+            {
+                //throw new FaultException<AutoDto>(e.MergedEntity.ConvertToDto());
+                throw new FaultException("Auto Update failed");
+            }
         }
 
         public KundeDto UpdateKunde(KundeDto kunde)
