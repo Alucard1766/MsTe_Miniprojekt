@@ -134,9 +134,9 @@ namespace AutoReservation.Service.Wcf
             {
                 return DtoConverter.ConvertToDto(_businessLayer.UpdateReservation(DtoConverter.ConvertToEntity(reservation)));
             }
-            catch (LocalOptimisticConcurrencyException<Reservation>)
+            catch (LocalOptimisticConcurrencyException<Reservation> e)
             {
-                throw new FaultException("Reservation update failed");
+                throw new FaultException<ReservationDto>(e.MergedEntity.ConvertToDto(), "Reservation update failed");
             }
             
         }

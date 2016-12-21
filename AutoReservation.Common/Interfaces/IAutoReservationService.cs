@@ -7,13 +7,10 @@ namespace AutoReservation.Common.Interfaces
     [ServiceContract]
     public interface IAutoReservationService
     {
-
         List<AutoDto> Autos { [OperationContract] get; }
         List<KundeDto> Kunden { [OperationContract] get; }
         List<ReservationDto> Reservationen { [OperationContract] get; }
-
-
-
+        
 
         [OperationContract]
         AutoDto GetAutoById(int id);
@@ -36,6 +33,7 @@ namespace AutoReservation.Common.Interfaces
         [OperationContract]
         KundeDto UpdateKunde(KundeDto kunde);
         [OperationContract]
+        [FaultContract(typeof(FaultException<ReservationDto>))]
         ReservationDto UpdateReservation(ReservationDto reservation);
 
 

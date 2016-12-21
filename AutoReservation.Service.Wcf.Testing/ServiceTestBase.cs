@@ -232,7 +232,7 @@ namespace AutoReservation.Service.Wcf.Testing
 
 
         [TestMethod]
-        [ExpectedException(typeof(FaultException))]
+        [ExpectedException(typeof(FaultException<ReservationDto>))]
         public void UpdateReservationWithOptimisticConcurrencyTest()
         {
             ReservationDto res1 = Target.Reservationen[0];
