@@ -22,8 +22,7 @@ namespace AutoReservation.Service.Wcf
             {
                 WriteActualMethod();
                 var businessLayer = new AutoReservationBusinessComponent();
-                List<Auto> list = businessLayer.Autos;
-                return DtoConverter.ConvertToDtos(list);
+                return DtoConverter.ConvertToDtos(businessLayer.Autos);
             }
         }
 
@@ -33,8 +32,7 @@ namespace AutoReservation.Service.Wcf
             {
                 WriteActualMethod();
                 var businessLayer = new AutoReservationBusinessComponent();
-                List<Kunde> list = businessLayer.Kunden;
-                return DtoConverter.ConvertToDtos(list);
+                return DtoConverter.ConvertToDtos(businessLayer.Kunden);
             }
         }
 
@@ -44,8 +42,7 @@ namespace AutoReservation.Service.Wcf
             {
                 WriteActualMethod();
                 var businessLayer = new AutoReservationBusinessComponent();
-                List<Reservation> list = businessLayer.Reservationen;
-                return DtoConverter.ConvertToDtos(list);
+                return DtoConverter.ConvertToDtos(businessLayer.Reservationen);
             }
         }
 
@@ -123,7 +120,6 @@ namespace AutoReservation.Service.Wcf
             }
             catch (LocalOptimisticConcurrencyException<Auto> e)
             {
-                //throw new FaultException<AutoDto>(e.MergedEntity.ConvertToDto());
                 throw new FaultException("Auto Update failed");
             }
         }

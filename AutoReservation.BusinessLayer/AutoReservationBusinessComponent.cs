@@ -15,13 +15,7 @@ namespace AutoReservation.BusinessLayer
             {
                 using (var context = new AutoReservationContext())
                 {
-                    var dbReturn = from c in context.Autos select c;
-                    List<Auto> autoList = new List<Auto>();
-                    foreach (Auto a in dbReturn)
-                    {
-                        autoList.Add(a);
-                    }
-                    return autoList;
+                    return context.Autos.ToList();
                 }
             }
         }
@@ -32,13 +26,7 @@ namespace AutoReservation.BusinessLayer
             {
                 using (var context = new AutoReservationContext())
                 {
-                    var dbReturn = from k in context.Kunden select k;
-                    List<Kunde> kundeList = new List<Kunde>();
-                    foreach (Kunde k in dbReturn)
-                    {
-                        kundeList.Add(k);
-                    }
-                    return kundeList;
+                    return context.Kunden.ToList();
                 }
             }
         }
@@ -49,9 +37,8 @@ namespace AutoReservation.BusinessLayer
             {
                 using (var context = new AutoReservationContext())
                 {
-                    var dbReturn = from r in context.Reservationen select r;
-                    List<Reservation> reservationList = new List<Reservation>();
-                    foreach (Reservation r in dbReturn)
+                    List<Reservation> reservationList = context.Reservationen.ToList();
+                    foreach (Reservation r in reservationList)
                     {
                         if (r.Auto == null)
                         {
@@ -61,7 +48,6 @@ namespace AutoReservation.BusinessLayer
                         {
                             r.Kunde = GetKundeById(r.KundeId);
                         }
-                        reservationList.Add(r);
                     }
                     return reservationList;
                 }
@@ -72,18 +58,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = from a in context.Autos
-                               where a.Id == id
-                               select a;
-
-                if (dbReturn.Count() == 1)
-                {
-                    return dbReturn.First();
-                }
-                else
-                {
-                    return null;
-                }
+                return context.Autos.FirstOrDefault(a => a.Id == id);
             }
         }
 
@@ -91,18 +66,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = from k in context.Kunden
-                               where k.Id == id
-                               select k;
-
-                if (dbReturn.Count() == 1)
-                {
-                    return dbReturn.First();
-                }
-                else
-                {
-                    return null;
-                }
+                return context.Kunden.FirstOrDefault(k => k.Id == id);
             }
         }
 
@@ -110,27 +74,23 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = from r in context.Reservationen
-                               where r.ReservationsNr == id
-                               select r;
+                Reservation reservation = context.Reservationen.FirstOrDefault(r => r.ReservationsNr == id);
 
-                if (dbReturn.Count() == 1)
-                {
-                    Reservation resReturn = dbReturn.First();
-                    if (resReturn.Auto == null)
-                    {
-                        resReturn.Auto = GetAutoById(resReturn.AutoId);
-                    }
-                    if (resReturn.Kunde == null)
-                    {
-                        resReturn.Kunde = GetKundeById(resReturn.KundeId);
-                    }
-                    return resReturn;
-                }
-                else
+                if (reservation == null)
                 {
                     return null;
                 }
+
+                if (reservation.Auto == null)
+                {
+                    reservation.Auto = GetAutoById(reservation.AutoId);
+                }
+                if (reservation.Kunde == null)
+                {
+                    reservation.Kunde = GetKundeById(reservation.KundeId);
+                }
+                return reservation;
+
             }
         }
 
@@ -139,6 +99,7 @@ namespace AutoReservation.BusinessLayer
             using (var context = new AutoReservationContext())
             {
                 context.Autos.Add(auto);
+                context.Entry(auto).State = EntityState.Added;
                 context.SaveChanges();
                 
             }
@@ -150,6 +111,7 @@ namespace AutoReservation.BusinessLayer
             using (var context = new AutoReservationContext())
             {
                 context.Kunden.Add(kunde);
+                context.Entry(kunde).State = EntityState.Added;
                 context.SaveChanges();
             }
             return kunde;
@@ -160,6 +122,7 @@ namespace AutoReservation.BusinessLayer
             using (var context = new AutoReservationContext())
             {
                 context.Reservationen.Add(reservation);
+                context.Entry(reservation).State = EntityState.Added;
                 context.SaveChanges();
             }
             return reservation;
@@ -229,13 +192,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = from a in context.Autos
-                               where a.Id == auto.Id
-                               select a;
-                foreach (var a in dbReturn)
-                {
-                    context.Autos.Remove(a);
-                }
+                context.Entry(auto).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }
@@ -244,13 +201,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = from k in context.Kunden
-                               where k.Id == kunde.Id
-                               select k;
-                foreach (var k in dbReturn)
-                {
-                    context.Kunden.Remove(k);
-                }
+                context.Entry(kunde).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }
@@ -259,13 +210,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                var dbReturn = from r in context.Reservationen
-                               where r.ReservationsNr == reservation.ReservationsNr
-                               select r;
-                foreach (var r in dbReturn)
-                {
-                    context.Reservationen.Remove(r);
-                }
+                context.Entry(reservation).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }

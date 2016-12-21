@@ -33,15 +33,9 @@ namespace AutoReservation.BusinessLayer.Testing
         {
             Auto auto = Target.Autos[0];
             auto.Marke = "Test";
-            //Auto auto = new StandardAuto
-            //{
-            //    Id = 1,
-            //    Marke = "Test",
-            //    Tagestarif = 60
-            //};
 
-            Auto ret = Target.UpdateAuto(auto);
-            Assert.AreEqual("Test", ret.Marke);
+            Target.UpdateAuto(auto);
+            Assert.AreEqual("Test", Target.Autos[0].Marke);
         }
 
         [TestMethod]
@@ -50,8 +44,8 @@ namespace AutoReservation.BusinessLayer.Testing
             Kunde kunde = Target.Kunden[0];
             kunde.Vorname = "Ueli";
 
-            Kunde ret = Target.UpdateKunde(kunde);
-            Assert.AreEqual("Ueli", ret.Vorname);
+            Target.UpdateKunde(kunde);
+            Assert.AreEqual("Ueli", Target.Kunden[0].Vorname);
         }
 
         [TestMethod]
@@ -60,8 +54,8 @@ namespace AutoReservation.BusinessLayer.Testing
             Reservation reservation = Target.Reservationen[1];
             reservation.Bis = new DateTime(2020, 01, 30);
 
-            Reservation ret = Target.UpdateReservation(reservation);
-            Assert.AreEqual(new DateTime(2020, 01, 30), ret.Bis);
+            Target.UpdateReservation(reservation);
+            Assert.AreEqual(new DateTime(2020, 01, 30), Target.Reservationen[1].Bis);
         }
 
     }

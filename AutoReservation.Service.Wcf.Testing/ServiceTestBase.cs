@@ -172,8 +172,8 @@ namespace AutoReservation.Service.Wcf.Testing
             AutoDto auto = Target.Autos[0];
             auto.Marke = "Test";
 
-            AutoDto ret = Target.UpdateAuto(auto);
-            Assert.AreEqual("Test", ret.Marke);
+            Target.UpdateAuto(auto);
+            Assert.AreEqual("Test", Target.Autos[0].Marke);
         }
 
         [TestMethod]
@@ -183,8 +183,8 @@ namespace AutoReservation.Service.Wcf.Testing
             kunde.Vorname = "Ueli";
 
 
-            KundeDto ret = Target.UpdateKunde(kunde);
-            Assert.AreEqual("Ueli", ret.Vorname);
+            Target.UpdateKunde(kunde);
+            Assert.AreEqual("Ueli", Target.Kunden[0].Vorname);
         }
 
         [TestMethod]
@@ -193,8 +193,8 @@ namespace AutoReservation.Service.Wcf.Testing
             ReservationDto reservation = Target.Reservationen[1];
             reservation.Bis = new DateTime(2020, 01, 30);
 
-            ReservationDto ret = Target.UpdateReservation(reservation);
-            Assert.AreEqual(new DateTime(2020, 01, 30), ret.Bis);
+            Target.UpdateReservation(reservation);
+            Assert.AreEqual(new DateTime(2020, 01, 30), Target.Reservationen[1].Bis);
         }
 
         #endregion
