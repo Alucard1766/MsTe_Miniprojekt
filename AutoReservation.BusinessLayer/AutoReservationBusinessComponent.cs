@@ -37,19 +37,7 @@ namespace AutoReservation.BusinessLayer
             {
                 using (var context = new AutoReservationContext())
                 {
-                    List<Reservation> reservationList = context.Reservationen.ToList();
-                    foreach (Reservation r in reservationList)
-                    {
-                        if (r.Auto == null)
-                        {
-                            r.Auto = GetAutoById(r.AutoId);
-                        }
-                        if (r.Kunde == null)
-                        {
-                            r.Kunde = GetKundeById(r.KundeId);
-                        }
-                    }
-                    return reservationList;
+                    return context.Reservationen.Include("Auto").Include("Kunde").ToList();
                 }
             }
         }
@@ -74,23 +62,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (var context = new AutoReservationContext())
             {
-                Reservation reservation = context.Reservationen.FirstOrDefault(r => r.ReservationsNr == id);
-
-                if (reservation == null)
-                {
-                    return null;
-                }
-
-                if (reservation.Auto == null)
-                {
-                    reservation.Auto = GetAutoById(reservation.AutoId);
-                }
-                if (reservation.Kunde == null)
-                {
-                    reservation.Kunde = GetKundeById(reservation.KundeId);
-                }
-                return reservation;
-
+                return context.Reservationen.Include("Auto").Include("Kunde").FirstOrDefault(r => r.ReservationsNr == id);
             }
         }
 
@@ -101,7 +73,6 @@ namespace AutoReservation.BusinessLayer
                 context.Autos.Add(auto);
                 context.Entry(auto).State = EntityState.Added;
                 context.SaveChanges();
-                
             }
             return auto;
         }
@@ -143,7 +114,6 @@ namespace AutoReservation.BusinessLayer
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-
                     throw CreateLocalOptimisticConcurrencyException(context, auto);
                 }
             }

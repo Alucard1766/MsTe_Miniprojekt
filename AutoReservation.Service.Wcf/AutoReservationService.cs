@@ -16,13 +16,14 @@ namespace AutoReservation.Service.Wcf
             Console.WriteLine($"Calling: {new StackTrace().GetFrame(1).GetMethod().Name}");
         }
 
+        private AutoReservationBusinessComponent _businessLayer = new AutoReservationBusinessComponent();
+
         public List<AutoDto> Autos
         {
             get
             {
                 WriteActualMethod();
-                var businessLayer = new AutoReservationBusinessComponent();
-                return DtoConverter.ConvertToDtos(businessLayer.Autos);
+                return DtoConverter.ConvertToDtos(_businessLayer.Autos);
             }
         }
 
@@ -31,8 +32,7 @@ namespace AutoReservation.Service.Wcf
             get
             {
                 WriteActualMethod();
-                var businessLayer = new AutoReservationBusinessComponent();
-                return DtoConverter.ConvertToDtos(businessLayer.Kunden);
+                return DtoConverter.ConvertToDtos(_businessLayer.Kunden);
             }
         }
 
@@ -41,8 +41,7 @@ namespace AutoReservation.Service.Wcf
             get
             {
                 WriteActualMethod();
-                var businessLayer = new AutoReservationBusinessComponent();
-                return DtoConverter.ConvertToDtos(businessLayer.Reservationen);
+                return DtoConverter.ConvertToDtos(_businessLayer.Reservationen);
             }
         }
 
@@ -50,75 +49,65 @@ namespace AutoReservation.Service.Wcf
         public void DeleteAuto(AutoDto auto)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            businessLayer.DeleteAuto(DtoConverter.ConvertToEntity(auto));
+            _businessLayer.DeleteAuto(DtoConverter.ConvertToEntity(auto));
         }
 
         public void DeleteKunde(KundeDto kunde)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            businessLayer.DeleteKunde(DtoConverter.ConvertToEntity(kunde));
+            _businessLayer.DeleteKunde(DtoConverter.ConvertToEntity(kunde));
         }
 
         public void DeleteReservation(ReservationDto reservation)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            businessLayer.DeleteReservation(DtoConverter.ConvertToEntity(reservation));
+            _businessLayer.DeleteReservation(DtoConverter.ConvertToEntity(reservation));
         }
 
         public AutoDto GetAutoById(int id)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.GetAutoById(id));
+            return DtoConverter.ConvertToDto(_businessLayer.GetAutoById(id));
         }
 
         public KundeDto GetKundeById(int id)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.GetKundeById(id));
+            return DtoConverter.ConvertToDto(_businessLayer.GetKundeById(id));
         }
 
         public ReservationDto GetReservationByNr(int reservationNr)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.GetReservationByNr(reservationNr));
+            return DtoConverter.ConvertToDto(_businessLayer.GetReservationByNr(reservationNr));
         }
 
         public AutoDto InsertAuto(AutoDto auto)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.InsertAuto(DtoConverter.ConvertToEntity(auto)));
+            return DtoConverter.ConvertToDto(_businessLayer.InsertAuto(DtoConverter.ConvertToEntity(auto)));
         }
 
         public KundeDto InsertKunde(KundeDto kunde)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.InsertKunde(DtoConverter.ConvertToEntity(kunde)));
+            return DtoConverter.ConvertToDto(_businessLayer.InsertKunde(DtoConverter.ConvertToEntity(kunde)));
         }
 
         public ReservationDto InsertReservation(ReservationDto reservation)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
-            return DtoConverter.ConvertToDto(businessLayer.InsertReservation(DtoConverter.ConvertToEntity(reservation)));
+            return DtoConverter.ConvertToDto(_businessLayer.InsertReservation(DtoConverter.ConvertToEntity(reservation)));
         }
 
         public AutoDto UpdateAuto(AutoDto auto)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
             try
             {
-                return DtoConverter.ConvertToDto(businessLayer.UpdateAuto(DtoConverter.ConvertToEntity(auto)));
+                return DtoConverter.ConvertToDto(_businessLayer.UpdateAuto(DtoConverter.ConvertToEntity(auto)));
             }
-            catch (LocalOptimisticConcurrencyException<Auto> e)
+            catch (LocalOptimisticConcurrencyException<Auto>)
             {
                 throw new FaultException("Auto Update failed");
             }
@@ -127,14 +116,12 @@ namespace AutoReservation.Service.Wcf
         public KundeDto UpdateKunde(KundeDto kunde)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
             try
             {
-                return DtoConverter.ConvertToDto(businessLayer.UpdateKunde(DtoConverter.ConvertToEntity(kunde)));
+                return DtoConverter.ConvertToDto(_businessLayer.UpdateKunde(DtoConverter.ConvertToEntity(kunde)));
             }
-            catch (LocalOptimisticConcurrencyException<Kunde> e)
+            catch (LocalOptimisticConcurrencyException<Kunde>)
             {
-
                 throw new FaultException("Kunde Update failed");
             }
 
@@ -143,12 +130,11 @@ namespace AutoReservation.Service.Wcf
         public ReservationDto UpdateReservation(ReservationDto reservation)
         {
             WriteActualMethod();
-            var businessLayer = new AutoReservationBusinessComponent();
             try
             {
-                return DtoConverter.ConvertToDto(businessLayer.UpdateReservation(DtoConverter.ConvertToEntity(reservation)));
+                return DtoConverter.ConvertToDto(_businessLayer.UpdateReservation(DtoConverter.ConvertToEntity(reservation)));
             }
-            catch (LocalOptimisticConcurrencyException<Reservation> e)
+            catch (LocalOptimisticConcurrencyException<Reservation>)
             {
                 throw new FaultException("Reservation update failed");
             }
